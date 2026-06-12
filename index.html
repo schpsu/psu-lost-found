@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; object-src 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; navigate-to https://app.notion.com https://lost-and-found-schpsu.notion.site;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>PSU Lost & Found — ของหายได้คืน</title>
@@ -116,7 +116,6 @@ body::before{
 .hero-stat-num{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--accent)}
 .hero-stat-lbl{font-size:12px;color:var(--text3);margin-top:2px}
 
-  
 /* ═══ FILTER BAR ════ */
 #filterBar{
   max-width:1200px;margin:0 auto;
@@ -427,11 +426,46 @@ select.form-input option{background:var(--surface2)}
   .form-grid{grid-template-columns:1fr}
   .charts-row{grid-template-columns:1fr}
   .hero-stats{gap:20px}
+  .hero-form-btns{gap:12px}
+  .hero-form-btn{min-width:unset;width:100%;max-width:100%}
 }
 @media(max-width:480px){
   .a-stats{grid-template-columns:1fr}
   .header-inner{flex-wrap:wrap}
 }
+
+/* ─ Hero Notion Form Buttons ─ */
+.hero-form-btns{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  margin-top:32px;
+}
+.hero-form-btn{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 22px;border-radius:var(--radius-lg);
+  text-decoration:none;min-width:240px;max-width:320px;flex:1;
+  border:1.5px solid transparent;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.hero-form-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.hero-form-btn--lost{
+  background:rgba(220,38,38,.07);
+  border-color:rgba(220,38,38,.25);
+}
+.hero-form-btn--lost:hover{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.12)}
+.hero-form-btn--found{
+  background:rgba(22,163,74,.07);
+  border-color:rgba(22,163,74,.25);
+}
+.hero-form-btn--found:hover{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.12)}
+.hfb-icon{font-size:28px;flex-shrink:0}
+.hfb-text{display:flex;flex-direction:column;text-align:left;flex:1}
+.hfb-title{font-size:15px;font-weight:700;line-height:1.2}
+.hfb-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.hfb-arrow{font-size:18px;color:var(--text3);transition:transform .2s}
+.hero-form-btn:hover .hfb-arrow{transform:translateX(4px)}
+.hero-form-btn--lost .hfb-title{color:#b91c1c}
+.hero-form-btn--found .hfb-title{color:var(--green)}
 
 /* ─ Fade-in animation ─ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -454,7 +488,7 @@ select.form-input option{background:var(--surface2)}
       <div class="header-actions">
         <div class="header-search">
           <span style="color:var(--text3)">🔍</span>
-          <input type="text" id="publicSearch" placeholder="ค้นหาชื่อสิ่งของ สถานที่...">
+          <input type="text" id="publicSearch" placeholder="ค้นหาชื่อสิ่งของ...">
         </div>
         <button class="btn-admin-login" onclick="openLogin()">
           🔐 แอดมิน
@@ -480,6 +514,27 @@ select.form-input option{background:var(--surface2)}
         <div class="hero-stat-num" style="color:var(--green)" id="heroReturned">0</div>
         <div class="hero-stat-lbl">ส่งคืนแล้ว</div>
       </div>
+    </div>
+
+    <div class="hero-form-btns">
+      <a href="https://app.notion.com/p/lost-and-found-schpsu/34ff7e0e77be810fbc7ccb7640cb8391"
+         target="_blank" rel="noopener noreferrer" class="hero-form-btn hero-form-btn--lost">
+        <span class="hfb-icon">📝</span>
+        <span class="hfb-text">
+          <span class="hfb-title">ฟอร์มแจ้งการสูญหาย</span>
+          <span class="hfb-sub">แจ้งเมื่อของคุณหาย</span>
+        </span>
+        <span class="hfb-arrow">→</span>
+      </a>
+      <a href="https://lost-and-found-schpsu.notion.site/357f7e0e77be80128002fbf72683f1ed?pvs=105"
+         target="_blank" rel="noopener noreferrer" class="hero-form-btn hero-form-btn--found">
+        <span class="hfb-icon">🔍</span>
+        <span class="hfb-text">
+          <span class="hfb-title">ฟอร์มแจ้งพบของหาย</span>
+          <span class="hfb-sub">แจ้งเมื่อพบของตกหล่น</span>
+        </span>
+        <span class="hfb-arrow">→</span>
+      </a>
     </div>
   </section>
 
@@ -1554,13 +1609,11 @@ function toast(msg, type='success', icon='✅'){
 /* ═══════════════════════════════════════════════
    INIT — async startup
    ═══════════════════════════════════════════════ */
-  (async function init(){
-    await initCfg();               /* set up PBKDF2 hash on first run */
-    items = await loadItemsSecure();  /* verify HMAC integrity */
-    renderPublic();
-  
+(async function init(){
+  await initCfg();               /* set up PBKDF2 hash on first run */
+  items = await loadItemsSecure();  /* verify HMAC integrity */
+  renderPublic();
 })();
-
 </script>
 </body>
 </html>
