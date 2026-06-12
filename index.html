@@ -1553,23 +1553,23 @@ function toast(msg, type='success', icon='✅'){
 /* ═══════════════════════════════════════════════
    INIT — async startup
    ═══════════════════════════════════════════════ */
-(async function init(){
-  await initCfg();               /* set up PBKDF2 hash on first run */
-  items = await loadItemsSecure();  /* verify HMAC integrity */
-  renderPublic();
-<div class="form-buttons">
-    <a href="https://app.notion.com/p/lost-and-found-schpsu/34ff7e0e77be810fbc7ccb7640cb8391"
-       target="_blank"
-       class="btn btn-danger">
-       ฟอร์มแจ้งการสูญหาย
-    </a>
+  (async function init(){
+    await initCfg();               /* set up PBKDF2 hash on first run */
+    items = await loadItemsSecure();  /* verify HMAC integrity */
+    renderPublic();
+  <div class="form-buttons">
+      <a href="https://app.notion.com/p/lost-and-found-schpsu/34ff7e0e77be810fbc7ccb7640cb8391"
+         target="_blank"
+         class="btn btn-danger">
+         ฟอร์มแจ้งการสูญหาย
+      </a>
 
-    <a href="https://lost-and-found-schpsu.notion.site/357f7e0e77be80128002fbf72683f1ed?pvs=105"
-       target="_blank"
-       class="btn btn-success">
-       ฟอร์มแจ้งพบของหาย
-    </a>
-</div>
+      <a href="https://lost-and-found-schpsu.notion.site/357f7e0e77be80128002fbf72683f1ed?pvs=105"
+         target="_blank"
+         class="btn btn-success">
+         ฟอร์มแจ้งพบของหาย
+      </a>
+  </div>
 })();
 </script>
 </body>
