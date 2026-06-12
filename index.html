@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; object-src 'none'; base-uri 'self';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>PSU Lost & Found — ของหายได้คืน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fc;
+  --bg2:#f0f2f7;
+  --surface:#ffffff;
+  --surface2:#f4f6fb;
+  --surface3:#e8ecf4;
+  --border:rgba(30,41,80,.1);
+  --border2:rgba(30,41,80,.18);
+  --accent:#3b82f6;
+  --accent-d:#1d4ed8;
+  --accent-l:rgba(59,130,246,.1);
+  --green:#16a34a;
+  --green-l:rgba(22,163,74,.1);
+  --yellow:#d97706;
+  --yellow-l:rgba(217,119,6,.1);
+  --red:#dc2626;
+  --red-l:rgba(220,38,38,.08);
+  --purple:#7c3aed;
+  --purple-l:rgba(124,58,237,.1);
+  --text:#0f172a;
+  --text2:#475569;
+  --text3:#94a3b8;
+  --font:'Sarabun',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --radius:10px;
+  --radius-lg:14px;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:15px;line-height:1.6}
+button{font-family:var(--font);cursor:pointer}
+input,select,textarea{font-family:var(--font)}
+img{max-width:100%}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+
+/* ── SUBTLE GRID BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(59,130,246,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.05) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ═══ PUBLIC HEADER ══ */
+#publicHeader{
+  position:sticky;top:0;z-index:100;
+  background:rgba(248,249,252,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;gap:16px;
+}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--accent);display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.logo-text h1{font-size:16px;font-weight:700;color:var(--text);line-height:1.2}
+.logo-text p{font-size:11px;color:var(--text2);margin-top:1px}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:8px 14px;
+  width:260px;transition:border-color .2s;
+}
+.header-search:focus-within{border-color:var(--accent)}
+.header-search input{background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%}
+.header-search input::placeholder{color:var(--text3)}
+.btn-admin-login{
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text2);padding:8px 16px;border-radius:var(--radius);
+  font-size:13px;display:flex;align-items:center;gap:6px;
+  transition:all .2s;white-space:nowrap;
+}
+.btn-admin-login:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ═══ HERO ════════════ */
+#hero{
+  max-width:1200px;margin:0 auto;
+  padding:60px 24px 40px;text-align:center;position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-l);border:1px solid rgba(59,130,246,.3);
+  border-radius:20px;padding:5px 14px;
+  font-size:12px;color:var(--accent);margin-bottom:20px;letter-spacing:.04em;
+}
+.hero-title{font-size:clamp(28px,5vw,48px);font-weight:700;line-height:1.15;margin-bottom:16px}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:16px;color:var(--text2);max-width:520px;margin:0 auto 32px}
+.hero-stats{
+  display:flex;justify-content:center;gap:32px;flex-wrap:wrap;
+}
+.hero-stat{text-align:center}
+.hero-stat-num{font-size:28px;font-weight:700;font-family:var(--mono);color:var(--accent)}
+.hero-stat-lbl{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* ═══ FILTER BAR ════ */
+#filterBar{
+  max-width:1200px;margin:0 auto;
+  padding:0 24px 24px;position:relative;z-index:1;
+}
+.filter-inner{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:14px 18px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.filter-label{font-size:12px;color:var(--text3);margin-right:4px;white-space:nowrap}
+.fbtn{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);padding:6px 14px;border-radius:20px;
+  font-size:13px;transition:all .2s;white-space:nowrap;
+}
+.fbtn:hover{border-color:var(--border2);color:var(--text)}
+.fbtn.active{background:var(--accent-l);border-color:rgba(59,130,246,.4);color:var(--accent)}
+.filter-count{
+  margin-left:auto;font-size:12px;color:var(--text3);
+  font-family:var(--mono);white-space:nowrap;
+}
+
+/* ═══ ITEMS GRID ════ */
+#publicGrid{
+  max-width:1200px;margin:0 auto;
+  padding:0 24px 60px;position:relative;z-index:1;
+}
+.items-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+/* ─ Item Card ─ */
+.item-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  cursor:pointer;
+}
+.item-card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:var(--shadow)}
+.card-img{width:100%;height:180px;object-fit:cover;background:var(--surface2);display:block}
+.card-img-placeholder{
+  width:100%;height:180px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;color:var(--text3);
+}
+.card-body{padding:16px}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.card-id{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.status-pill{
+  font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.status-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.pill-wait{background:var(--yellow-l);color:var(--yellow)}
+.pill-done{background:var(--green-l);color:var(--green)}
+.card-name{font-size:16px;font-weight:600;margin-bottom:4px}
+.card-detail{font-size:13px;color:var(--text2);margin-bottom:12px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{
+  display:flex;align-items:center;gap:8px;
+  padding-top:12px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--text3);
+}
+.card-footer .type-badge{
+  background:var(--surface2);border-radius:6px;
+  padding:3px 8px;font-size:12px;
+}
+.card-location{display:flex;align-items:center;gap:4px;margin-left:auto}
+
+/* ─ Empty state ─ */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:80px 20px;
+  color:var(--text3);font-size:14px;
+}
+.empty-state .empty-icon{font-size:56px;margin-bottom:16px}
+
+/* ═══ MODAL OVERLAY ════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(15,23,42,.5);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);
+  width:100%;max-width:520px;max-height:90vh;
+  overflow-y:auto;
+  transform:translateY(20px);transition:transform .25s;
+  box-shadow:var(--shadow);
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--surface);z-index:1;
+}
+.modal-title{font-size:17px;font-weight:600}
+.modal-close{
+  background:none;border:none;color:var(--text2);
+  font-size:22px;line-height:1;padding:4px 8px;border-radius:6px;
+  transition:color .2s;
+}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px}
+.modal-img{width:100%;max-height:300px;object-fit:contain;border-radius:var(--radius);margin-bottom:20px;background:var(--surface2)}
+.modal-field{margin-bottom:16px}
+.mf-label{font-size:12px;color:var(--text3);margin-bottom:4px}
+.mf-val{font-size:14px;color:var(--text)}
+.mf-val-large{font-size:20px;font-weight:600}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ═══ LOGIN MODAL ════ */
+#loginModal .modal{max-width:380px}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .login-icon{font-size:40px;margin-bottom:8px}
+.login-logo h2{font-size:20px;font-weight:700}
+.login-logo p{font-size:13px;color:var(--text2);margin-top:4px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px}
+.form-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 14px;
+  color:var(--text);font-size:14px;outline:none;transition:border-color .2s;
+}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--text3)}
+.form-error{font-size:12px;color:var(--red);margin-top:6px;display:none}
+.form-error.show{display:block}
+
+/* ═══ BUTTONS ════ */
+.btn{padding:10px 20px;border-radius:var(--radius);font-size:14px;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d)}
+.btn-full{width:100%;justify-content:center}
+.btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--red-l);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+.btn-success{background:var(--green-l);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.btn-success:hover{background:rgba(34,197,94,.2)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:7px}
+
+/* ═══ ADMIN PANEL ════ */
+#adminPanel{display:none;min-height:100vh;position:relative;z-index:1}
+#adminPanel.open{display:flex}
+.admin-sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.admin-logo{
+  padding:20px 18px;border-bottom:1px solid var(--border);
+}
+.admin-logo .logo-badge{
+  display:flex;align-items:center;gap:8px;
+  background:var(--accent-l);border:1px solid rgba(59,130,246,.25);
+  border-radius:8px;padding:8px 12px;margin-bottom:10px;
+}
+.admin-logo .logo-badge span{font-size:18px}
+.admin-logo .logo-badge b{font-size:11px;letter-spacing:2px;color:var(--accent)}
+.admin-logo h2{font-size:14px;font-weight:600}
+.admin-logo p{font-size:11px;color:var(--text3);margin-top:2px}
+.admin-nav{padding:14px 10px;flex:1}
+.nav-section{font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:14px}
+.nav-item{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 10px;border-radius:8px;
+  font-size:13px;color:var(--text2);cursor:pointer;
+  transition:all .18s;margin-bottom:2px;
+}
+.nav-item:hover{background:rgba(59,130,246,.06);color:var(--text)}
+.nav-item.active{background:var(--accent-l);color:var(--accent);border:1px solid rgba(59,130,246,.2)}
+.nav-item .nav-icon{width:16px;text-align:center;font-size:15px}
+.nav-badge{margin-left:auto;font-size:10px;font-family:var(--mono);background:var(--accent-l);color:var(--accent);padding:1px 6px;border-radius:10px}
+.admin-footer{padding:14px 18px;border-top:1px solid var(--border)}
+.admin-footer .user-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:var(--text3)}
+
+.admin-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.admin-topbar{
+  padding:16px 28px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:rgba(248,249,252,.95);
+  backdrop-filter:blur(8px);position:sticky;top:0;z-index:10;
+}
+.admin-topbar-title{font-size:18px;font-weight:600}
+.admin-topbar-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.admin-topbar-actions{display:flex;gap:10px;align-items:center}
+.admin-content{padding:24px 28px;overflow-y:auto;flex:1}
+
+/* ─ Admin Tab Sections ─ */
+.admin-section{display:none}
+.admin-section.active{display:block}
+
+/* ─ Stats Grid ─ */
+.a-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.a-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px}
+.a-stat-icon{font-size:20px;margin-bottom:10px}
+.a-stat-num{font-size:28px;font-weight:700;font-family:var(--mono);line-height:1}
+.a-stat-lbl{font-size:12px;color:var(--text2);margin-top:4px}
+.blue .a-stat-num{color:var(--accent)}
+.grn  .a-stat-num{color:var(--green)}
+.ylw  .a-stat-num{color:var(--yellow)}
+.prp  .a-stat-num{color:var(--purple)}
+
+/* ─ Admin Table ─ */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.table-toolbar{
+  padding:14px 18px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.table-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:7px 12px;width:220px;
+}
+.table-search input{background:none;border:none;outline:none;color:var(--text);font-size:13px;flex:1}
+.table-search input::placeholder{color:var(--text3)}
+.table-filter-select{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:7px 12px;
+  color:var(--text2);font-size:13px;outline:none;cursor:pointer;
+}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{border-bottom:1px solid var(--border)}
+th{padding:11px 14px;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);font-weight:500;white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(148,163,184,.04);transition:background .15s;cursor:pointer}
+tbody tr:hover{background:rgba(59,130,246,.03)}
+td{padding:12px 14px;font-size:13px}
+.td-name{font-weight:600}
+.td-detail{font-size:11px;color:var(--text2);margin-top:2px}
+.td-id{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.td-type{font-size:12px;background:var(--surface2);border-radius:5px;padding:2px 7px;white-space:nowrap}
+.td-loc{font-size:12px;color:var(--text2)}
+.td-date{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.action-btns{display:flex;gap:6px}
+
+/* ─ Item Form ─ */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-full{grid-column:1/-1}
+.form-group-admin label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px}
+.form-group-admin .form-input{width:100%}
+select.form-input option{background:var(--surface2)}
+.img-upload-area{
+  border:2px dashed var(--border2);border-radius:var(--radius);
+  padding:24px;text-align:center;cursor:pointer;transition:border-color .2s;
+  position:relative;
+}
+.img-upload-area:hover{border-color:var(--accent)}
+.img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-area .upload-icon{font-size:32px;margin-bottom:8px;color:var(--text3)}
+.img-upload-area .upload-label{font-size:13px;color:var(--text2)}
+.img-upload-area .upload-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.img-preview-wrap{margin-top:12px;display:none}
+.img-preview-wrap img{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius);background:var(--surface2)}
+.form-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+
+/* ─ Settings ─ */
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:20px}
+.settings-section h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.settings-section p{font-size:13px;color:var(--text2);margin-bottom:20px}
+.settings-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* ─ Toast ─ */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:12px 18px;
+  font-size:13px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:8px;
+  transform:translateY(20px);opacity:0;
+  transition:all .3s;pointer-events:none;min-width:220px;
+}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+#toast.error{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+#toast .toast-icon{font-size:16px}
+
+/* ─ Charts area ─ */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.chart-box h4{font-size:13px;font-weight:500;margin-bottom:14px;color:var(--text2)}
+.bar-chart{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.bar-lbl{width:110px;color:var(--text2);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:18px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:500;transition:width .6s ease;min-width:18px}
+.bar-num{font-family:var(--mono);font-size:11px;color:var(--text3);width:20px;text-align:right}
+
+/* ─ Change password badge ─ */
+.pwd-strength{font-size:11px;margin-top:5px}
+
+/* ─ Responsive ─ */
+@media(max-width:768px){
+  .a-stats{grid-template-columns:1fr 1fr}
+  .header-search{width:auto;flex:1}
+  .admin-sidebar{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .charts-row{grid-template-columns:1fr}
+  .hero-stats{gap:20px}
+}
+@media(max-width:480px){
+  .a-stats{grid-template-columns:1fr}
+  .header-inner{flex-wrap:wrap}
+}
+
+/* ─ Fade-in animation ─ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.item-card,.a-stat,.chart-box{animation:fadeUp .35s ease both}
+</style>
+</head>
+<body>
+
+<!-- ═══ PUBLIC VIEW ═══ -->
+<div id="publicView">
+  <header id="publicHeader">
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">
+          <h1>PSU Lost &amp; Found</h1>
+          <p>ของหายได้คืน — Prince of Songkla University</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="header-search">
+          <span style="color:var(--text3)">🔍</span>
+          <input type="text" id="publicSearch" placeholder="ค้นหาชื่อสิ่งของ...">
+        </div>
+        <button class="btn-admin-login" onclick="openLogin()">
+          🔐 แอดมิน
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section id="hero">
+    <div class="hero-badge">✦ ระบบติดตามของหาย มหาวิทยาลัยสงขลานครินทร์</div>
+    <h1 class="hero-title">พบของหาย?<br>เราช่วย<span> นำกลับคืน</span></h1>
+    <p class="hero-sub">รวบรวมสิ่งของที่พบภายในมหาวิทยาลัยทั้งหมด สามารถค้นหาและติดต่อรับของได้ที่นี่</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="heroTotal">0</div>
+        <div class="hero-stat-lbl">รายการทั้งหมด</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--yellow)" id="heroWaiting">0</div>
+        <div class="hero-stat-lbl">รอเจ้าของ</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--green)" id="heroReturned">0</div>
+        <div class="hero-stat-lbl">ส่งคืนแล้ว</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="filterBar">
+    <div class="filter-inner">
+      <span class="filter-label">กรองตาม:</span>
+      <button class="fbtn active" onclick="setFilter('all',this)">ทั้งหมด</button>
+      <button class="fbtn" onclick="setFilter('รอเจ้าของ',this)">⏳ รอเจ้าของ</button>
+      <button class="fbtn" onclick="setFilter('รับคืนแล้ว',this)">✅ รับคืนแล้ว</button>
+      <button class="fbtn" onclick="setFilter('📱 อิเล็กทรอนิกส์',this)">📱 อิเล็กทรอนิกส์</button>
+      <button class="fbtn" onclick="setFilter('🪪 บัตร',this)">🪪 บัตร</button>
+      <button class="fbtn" onclick="setFilter('🔑 กุญแจ',this)">🔑 กุญแจ</button>
+      <button class="fbtn" onclick="setFilter('🧢 เครื่องแต่งกาย',this)">🧢 เครื่องแต่งกาย</button>
+      <button class="fbtn" onclick="setFilter('💄 ของใช้ส่วนตัว',this)">💄 ของใช้ส่วนตัว</button>
+      <span class="filter-count" id="filterCount">0 รายการ</span>
+    </div>
+  </section>
+
+  <section id="publicGrid">
+    <div class="items-grid" id="itemsGrid"></div>
+  </section>
+</div>
+
+<!-- ═══ ADMIN PANEL ═══ -->
+<div id="adminPanel">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <div class="logo-badge">
+        <span>🎓</span>
+        <b>PSU</b>
+      </div>
+      <h2>Admin Panel</h2>
+      <p>Lost &amp; Found</p>
+    </div>
+    <nav class="admin-nav">
+      <div class="nav-section">ภาพรวม</div>
+      <div class="nav-item active" onclick="switchTab('dashboard',this)">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+      <div class="nav-section">จัดการข้อมูล</div>
+      <div class="nav-item" onclick="switchTab('items',this)">
+        <span class="nav-icon">📋</span> รายการทั้งหมด
+        <span class="nav-badge" id="sidebarCount">0</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('add',this)">
+        <span class="nav-icon">➕</span> เพิ่มสิ่งของ
+      </div>
+      <div class="nav-section">ระบบ</div>
+      <div class="nav-item" onclick="switchTab('settings',this)">
+        <span class="nav-icon">⚙️</span> ตั้งค่า
+      </div>
+      <div class="nav-item" onclick="goPublic()">
+        <span class="nav-icon">🌐</span> ดูหน้าสาธารณะ
+      </div>
+    </nav>
+    <div class="admin-footer">
+      <div class="user-row">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Administrator</div>
+          <div class="user-role">ผู้ดูแลระบบ</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center" onclick="logout()">🚪 ออกจากระบบ</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-topbar-title" id="tabTitle">Dashboard</div>
+        <div class="admin-topbar-sub" id="tabSub">ภาพรวมระบบ Lost & Found</div>
+      </div>
+      <div class="admin-topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="switchTab('add', document.querySelector('.nav-item:nth-child(3)'))">+ เพิ่มรายการ</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Dashboard -->
+      <div class="admin-section active" id="tab-dashboard">
+        <div class="a-stats">
+          <div class="a-stat blue"><div class="a-stat-icon">📦</div><div class="a-stat-num" id="dTotal">0</div><div class="a-stat-lbl">รายการทั้งหมด</div></div>
+          <div class="a-stat ylw"><div class="a-stat-icon">⏳</div><div class="a-stat-num" id="dWaiting">0</div><div class="a-stat-lbl">รอเจ้าของ</div></div>
+          <div class="a-stat grn"><div class="a-stat-icon">✅</div><div class="a-stat-num" id="dReturned">0</div><div class="a-stat-lbl">ส่งคืนแล้ว</div></div>
+          <div class="a-stat prp"><div class="a-stat-icon">📍</div><div class="a-stat-num" id="dLocations">0</div><div class="a-stat-lbl">จุดฝากของ</div></div>
+        </div>
+        <div class="charts-row">
+          <div class="chart-box">
+            <h4>ประเภทสิ่งของ</h4>
+            <div class="bar-chart" id="chartCategory"></div>
+          </div>
+          <div class="chart-box">
+            <h4>จุดฝากของ (Top 6)</h4>
+            <div class="bar-chart" id="chartLocation"></div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <h4>รายการล่าสุด 5 รายการ</h4>
+          <div id="recentItems"></div>
+        </div>
+      </div>
+
+      <!-- Items list -->
+      <div class="admin-section" id="tab-items">
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="table-search">
+              <span style="color:var(--text3)">🔍</span>
+              <input type="text" id="adminSearch" placeholder="ค้นหา..." oninput="renderAdminTable()">
+            </div>
+            <select class="table-filter-select" id="adminFilter" onchange="renderAdminTable()">
+              <option value="">สถานะทั้งหมด</option>
+              <option value="รอเจ้าของ">รอเจ้าของ</option>
+              <option value="รับคืนแล้ว">รับคืนแล้ว</option>
+            </select>
+            <select class="table-filter-select" id="adminTypeFilter" onchange="renderAdminTable()">
+              <option value="">ประเภททั้งหมด</option>
+              <option value="📱 อิเล็กทรอนิกส์">📱 อิเล็กทรอนิกส์</option>
+              <option value="🪪 บัตร">🪪 บัตร</option>
+              <option value="🔑 กุญแจ">🔑 กุญแจ</option>
+              <option value="🧢 เครื่องแต่งกาย">🧢 เครื่องแต่งกาย</option>
+              <option value="💄 ของใช้ส่วนตัว">💄 ของใช้ส่วนตัว</option>
+              <option value="📗 การเรียน">📗 การเรียน</option>
+              <option value="อื่น ๆ">อื่น ๆ</option>
+            </select>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>สิ่งของ</th>
+                  <th>ประเภท</th>
+                  <th>สถานที่พบ</th>
+                  <th>ที่เก็บ</th>
+                  <th>วันที่</th>
+                  <th>สถานะ</th>
+                  <th>การจัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add item -->
+      <div class="admin-section" id="tab-add">
+        <div class="form-card">
+          <input type="hidden" id="editId">
+          <div class="form-grid">
+            <div class="form-group-admin form-full">
+              <label>ชื่อสิ่งของ *</label>
+              <input type="text" class="form-input" id="fName" placeholder="เช่น โทรศัพท์มือถือ, บัตรนักศึกษา" maxlength="100" autocomplete="off">
+            </div>
+            <div class="form-group-admin">
+              <label>หมายเลข (เช่น LF-23)</label>
+              <input type="text" class="form-input" id="fId" placeholder="จะสร้างอัตโนมัติถ้าว่าง" maxlength="20" autocomplete="off">
+            </div>
+            <div class="form-group-admin">
+              <label>ประเภท *</label>
+              <select class="form-input" id="fType">
+                <option value="">-- เลือกประเภท --</option>
+                <option>📱 อิเล็กทรอนิกส์</option>
+                <option>🪪 บัตร</option>
+                <option>🔑 กุญแจ</option>
+                <option>🧢 เครื่องแต่งกาย</option>
+                <option>💄 ของใช้ส่วนตัว</option>
+                <option>📗 การเรียน</option>
+                <option>อื่น ๆ</option>
+              </select>
+            </div>
+            <div class="form-group-admin form-full">
+              <label>รายละเอียด</label>
+              <textarea class="form-input" id="fDetail" rows="2" placeholder="สี, ยี่ห้อ, ลักษณะเฉพาะ..." maxlength="500"></textarea>
+            </div>
+            <div class="form-group-admin">
+              <label>วันที่พบ *</label>
+              <input type="datetime-local" class="form-input" id="fDate">
+            </div>
+            <div class="form-group-admin">
+              <label>สถานที่พบ *</label>
+              <input type="text" class="form-input" id="fFoundAt" placeholder="เช่น ห้อง Co-working ร่มศรีตรัง" maxlength="200" autocomplete="off">
+            </div>
+            <div class="form-group-admin">
+              <label>ตำแหน่งเก็บของ</label>
+              <input type="text" class="form-input" id="fStorage" placeholder="เช่น ห้องสภานักศึกษาฯ" maxlength="200" autocomplete="off">
+            </div>
+            <div class="form-group-admin">
+              <label>สถานะ</label>
+              <select class="form-input" id="fStatus">
+                <option value="รอเจ้าของ">รอเจ้าของ</option>
+                <option value="รับคืนแล้ว">รับคืนแล้ว</option>
+              </select>
+            </div>
+            <div class="form-group-admin form-full">
+              <label>ภาพถ่ายสิ่งของ</label>
+              <div class="img-upload-area" id="uploadArea">
+                <input type="file" accept="image/*" id="imgFile" onchange="handleImgUpload(event)">
+                <div class="upload-icon">📷</div>
+                <div class="upload-label">คลิกหรือลากไฟล์ภาพมาวาง</div>
+                <div class="upload-hint">JPG, PNG, WEBP ขนาดไม่เกิน 5MB</div>
+              </div>
+              <div class="img-preview-wrap" id="previewWrap">
+                <img id="imgPreview" src="" alt="preview">
+                <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="clearImage()">✕ ลบภาพ</button>
+              </div>
+              <input type="hidden" id="fImg">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-ghost" onclick="resetForm()">ล้างฟอร์ม</button>
+            <button class="btn btn-primary" onclick="saveItem()" id="saveBtn">💾 บันทึก</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="admin-section" id="tab-settings">
+        <div class="settings-section">
+          <h3>🔐 เปลี่ยนรหัสผ่านผู้ดูแล</h3>
+          <p>เปลี่ยนรหัสผ่านสำหรับเข้าสู่ระบบแอดมิน</p>
+          <div class="form-group">
+            <label>รหัสผ่านปัจจุบัน</label>
+            <input type="password" class="form-input" id="pwdCurrent" placeholder="ใส่รหัสผ่านปัจจุบัน">
+          </div>
+          <div class="form-group">
+            <label>รหัสผ่านใหม่</label>
+            <input type="password" class="form-input" id="pwdNew" placeholder="รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)">
+          </div>
+          <div class="form-group">
+            <label>ยืนยันรหัสผ่านใหม่</label>
+            <input type="password" class="form-input" id="pwdConfirm" placeholder="ยืนยันรหัสผ่านใหม่">
+          </div>
+          <button class="btn btn-primary" onclick="changePassword()">🔒 เปลี่ยนรหัสผ่าน</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>🌐 ข้อมูลเว็บไซต์</h3>
+          <p>ตั้งค่าชื่อและคำอธิบายเว็บไซต์</p>
+          <div class="form-group">
+            <label>ชื่อหน่วยงาน</label>
+            <input type="text" class="form-input" id="setOrgName" value="ห้องสภานักศึกษาฯ มหาวิทยาลัยสงขลานครินทร์">
+          </div>
+          <div class="form-group">
+            <label>ช่องทางติดต่อ (แสดงบนหน้าหลัก)</label>
+            <input type="text" class="form-input" id="setContact" value="FB: สภานักศึกษา มอ. หาดใหญ่ | Tel: 074-282000">
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>🗄️ ข้อมูลระบบ</h3>
+          <p>จัดการข้อมูลทั้งหมดในระบบ</p>
+          <button class="btn btn-ghost btn-sm" onclick="exportData()">📤 ส่งออกข้อมูล JSON</button>
+          &nbsp;
+          <button class="btn btn-danger btn-sm" onclick="confirmClearData()">🗑️ ล้างข้อมูลทั้งหมด</button>
+        </div>
+
+        <div class="settings-section">
+          <h3>📋 Audit Log</h3>
+          <p>บันทึกการใช้งานระบบล่าสุด 50 รายการ — ตรวจสอบการเข้าถึงและการแก้ไขข้อมูล</p>
+          <div id="auditLog" style="font-size:12px;max-height:320px;overflow-y:auto;background:var(--surface2);border-radius:var(--radius);padding:10px 14px;"></div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="renderAuditLog()">🔄 รีเฟรช</button>
+            <button class="btn btn-danger btn-sm" onclick="clearAuditLog()">🗑️ ล้าง Log</button>
+          </div>
+        </div>
+
+        <div class="settings-section" style="border:1px solid rgba(59,130,246,.2);background:rgba(59,130,246,.03)">
+          <h3>🛡️ สถานะความปลอดภัย</h3>
+          <p>ระบบรักษาความปลอดภัยที่เปิดใช้งานอยู่</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px" id="securityStatus">
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> PBKDF2 password hashing (100K iterations)</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> Brute-force lockout (5 attempts / 15 min)</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> Session timeout (2 hours inactivity)</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> HMAC-SHA-256 data integrity check</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> XSS sanitisation on all output</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> Content Security Policy header</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> Audit log (all admin actions)</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="color:var(--green)">✅</span> Constant-time password comparison</div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>📋 บันทึกการเข้าใช้งาน (Audit Log)</h3>
+          <p>ประวัติการเข้าสู่ระบบและการดำเนินการสำคัญ 50 รายการล่าสุด</p>
+          <div id="auditLog" style="max-height:320px;overflow-y:auto;font-size:12px;font-family:var(--mono)"></div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="clearAuditLog()">🗑️ ล้าง Audit Log</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGIN MODAL ═══ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-body">
+      <div class="login-logo">
+        <div class="login-icon">🔐</div>
+        <h2>เข้าสู่ระบบแอดมิน</h2>
+        <p>PSU Lost &amp; Found Admin Panel</p>
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <input type="password" class="form-input" id="loginPwd" placeholder="ใส่รหัสผ่าน" onkeydown="if(event.key==='Enter')doLogin()">
+        <div class="form-error" id="loginError">รหัสผ่านไม่ถูกต้อง</div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()">เข้าสู่ระบบ</button>
+      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="closeLogin()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ITEM DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">รายละเอียดสิ่งของ</div>
+      <button class="modal-close" onclick="closeItemModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SECURITY LAYER
+   ═══════════════════════════════════════════════ */
+
+/* ── CRYPTO HELPERS ─────────────────────────────────
+   All password hashing uses PBKDF2 (100,000 iterations, SHA-256)
+   with a random 128-bit salt — far stronger than plain SHA-256.
+   Data integrity uses HMAC-SHA-256 to detect localStorage tampering.
+   ─────────────────────────────────────────────────── */
+
+/* Derive PBKDF2 hash — returns "salt:hash" hex string */
+async function hashPassword(plain){
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const keyMat = await crypto.subtle.importKey('raw', new TextEncoder().encode(plain), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'}, keyMat, 256);
+  const saltHex = Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const hashHex = Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return saltHex + ':' + hashHex;
+}
+
+/* Verify PBKDF2 hash — timing-safe comparison via fixed-time loop */
+async function verifyPassword(plain, stored){
+  try {
+    const [saltHex, expectedHex] = stored.split(':');
+    if(!saltHex||!expectedHex) return false;
+    const salt = new Uint8Array(saltHex.match(/.{2}/g).map(h=>parseInt(h,16)));
+    const keyMat = await crypto.subtle.importKey('raw', new TextEncoder().encode(plain), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'}, keyMat, 256);
+    const actualHex = Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    /* Constant-time string compare — prevents timing attacks */
+    let diff = actualHex.length ^ expectedHex.length;
+    const len = Math.min(actualHex.length, expectedHex.length);
+    for(let i=0;i<len;i++) diff |= actualHex.charCodeAt(i) ^ expectedHex.charCodeAt(i);
+    return diff === 0;
+  } catch(e){ return false; }
+}
+
+/* Backward-compat: also accept legacy SHA-256 hash (migrates on next password change) */
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* HMAC-SHA-256 for data integrity — detects manual localStorage tampering */
+const HMAC_SECRET = 'psu-lf-integrity-v1';
+async function computeHmac(data){
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(HMAC_SECRET), {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
+  return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function saveItemsSecure(arr){
+  const json = JSON.stringify(arr);
+  const mac = await computeHmac(json);
+  localStorage.setItem(DB_KEY, json);
+  localStorage.setItem(DB_KEY+'_mac', mac);
+}
+async function loadItemsSecure(){
+  const json = localStorage.getItem(DB_KEY);
+  const mac  = localStorage.getItem(DB_KEY+'_mac');
+  if(!json){ await saveItemsSecure(SEED); return JSON.parse(JSON.stringify(SEED)); }
+  if(mac){
+    const expected = await computeHmac(json);
+    if(expected !== mac){
+      auditLog('TAMPER','⚠️ localStorage integrity check failed — data may have been modified');
+      toast('⚠️ ตรวจพบการแก้ไขข้อมูลนอกระบบ','error','🚨');
+    }
+  }
+  try{ return JSON.parse(json); } catch(e){ return JSON.parse(JSON.stringify(SEED)); }
+}
+
+/* XSS sanitiser — escape all user-supplied strings before innerHTML */
+function esc(str){
+  return String(str||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* Brute-force lockout — max 5 attempts, 15-min cooldown */
+const BF_KEY = 'psu_lf_bf';
+function getBF(){ try{ return JSON.parse(sessionStorage.getItem(BF_KEY))||{count:0,until:0}; }catch(e){return{count:0,until:0};} }
+function saveBF(o){ sessionStorage.setItem(BF_KEY, JSON.stringify(o)); }
+function isLocked(){ const b=getBF(); return b.count>=5 && Date.now()<b.until; }
+function lockRemaining(){ return Math.ceil((getBF().until - Date.now())/60000); }
+function recordFail(){ const b=getBF(); b.count++; if(b.count>=5) b.until=Date.now()+15*60*1000; saveBF(b); }
+function resetBF(){ saveBF({count:0,until:0}); }
+
+/* Session token — expires after 2 hours of inactivity */
+const SES_KEY = 'psu_lf_session';
+const SES_TTL = 2 * 60 * 60 * 1000; // 2 hours ms
+function createSession(){ sessionStorage.setItem(SES_KEY, JSON.stringify({token: crypto.randomUUID(), exp: Date.now()+SES_TTL})); }
+function touchSession(){ const s=getSession(); if(s){ s.exp=Date.now()+SES_TTL; sessionStorage.setItem(SES_KEY,JSON.stringify(s)); } }
+function getSession(){ try{ return JSON.parse(sessionStorage.getItem(SES_KEY)); }catch(e){ return null; } }
+function isSessionValid(){ const s=getSession(); return s && Date.now()<s.exp; }
+function destroySession(){ sessionStorage.removeItem(SES_KEY); }
+
+/* Auto-logout on inactivity */
+let activityTimer;
+function resetActivityTimer(){
+  clearTimeout(activityTimer);
+  touchSession();
+  activityTimer = setTimeout(()=>{ if(isAdmin){ logout(); toast('หมดเวลาใช้งาน — กรุณาเข้าสู่ระบบใหม่','error','⏱️'); } }, SES_TTL);
+}
+['click','keydown','mousemove','touchstart'].forEach(ev=>document.addEventListener(ev, resetActivityTimer, {passive:true}));
+
+/* ═══════════════════════════════════════════════
+   DATA LAYER — localStorage-backed "database"
+   ═══════════════════════════════════════════════ */
+const DB_KEY   = 'psu_lf_items';
+const CFG_KEY  = 'psu_lf_config';
+
+/* Default password hash of '69schloveu' — computed once at first run */
+const DEFAULT_PWD_PLAIN = '69schloveu';
+const DEFAULT_CFG = {
+  passwordHash: null, /* set async on first load */
+  orgName: 'ห้องสภานักศึกษาฯ มหาวิทยาลัยสงขลานครินทร์',
+  contact: 'FB: สภานักศึกษา มอ. หาดใหญ่ | Tel: 074-282000'
+};
+
+const SEED = [
+  {id:'LF-1', name:'บัตรประชาชน',     type:'🪪 บัตร',              detail:'ของ นายดำ บางระจันวันเพ็ญ',                      date:'2026-03-29T19:33', foundAt:'อ่างน้ำรูปหัวใจ ม.อ.',              storage:'ห้องสภานักศึกษาฯ', status:'รับคืนแล้ว', img:''},
+  {id:'LF-2', name:'บัตรนักศึกษา',    type:'🪪 บัตร',              detail:'รหัส 7011519999',                                  date:'2026-03-29T19:44', foundAt:'โรงช้าง',                            storage:'ห้องสภานักศึกษาฯ', status:'รับคืนแล้ว', img:''},
+  {id:'LF-3', name:'พัดลมพกพา',       type:'💄 ของใช้ส่วนตัว',    detail:'ยี่ห้อ Xiaoma สีเขียว/ขาว มีตำหนิที่ใบพัด',      date:'2026-03-29T23:02', foundAt:'สนามแบดมินตัน',                      storage:'ห้องสภานักศึกษาฯ', status:'รอเจ้าของ', img:''},
+  {id:'LF-9', name:'เมาส์',           type:'📱 อิเล็กทรอนิกส์',  detail:'รุ่น acar สีดำ มีสติ๊กเกอร์ลายแมว',               date:'2026-04-02T21:04', foundAt:'ห้อง Co-working space ร่มศรีตรัง',   storage:'ห้องสภานักศึกษาฯ', status:'รอเจ้าของ', img:''},
+  {id:'LF-11',name:'หมวก',            type:'🧢 เครื่องแต่งกาย',   detail:'สีดำ ลายดอกศรีตรัง',                              date:'2026-04-16T17:10', foundAt:'ทางเข้า sport complex',              storage:'ห้องสภานักศึกษาฯ', status:'รอเจ้าของ', img:''},
+  {id:'LF-12',name:'กระติกน้ำ',       type:'💄 ของใช้ส่วนตัว',    detail:'สีแดง ยี่ห้อ Water',                              date:'2026-04-16T17:10', foundAt:'โรงช้าง',                            storage:'ห้องสภานักศึกษาฯ', status:'รอเจ้าของ', img:''},
+  {id:'LF-13',name:'กล่องหูฟัง',      type:'📱 อิเล็กทรอนิกส์',  detail:'สีชมพู ห้อยไก่โอ้ก มีหูฟังสีขาวข้างใน',           date:'2026-04-16T17:10', foundAt:'ใต้ตึกกิจ',                         storage:'จุดฝากของหาย 4', status:'รอเจ้าของ', img:''},
+  {id:'LF-14',name:'กล่องแว่น',       type:'💄 ของใช้ส่วนตัว',    detail:'สีครีม มีแว่นข้างใน',                             date:'2026-04-16T20:19', foundAt:'ห้อง Co-working space ร่มศรีตรัง',   storage:'จุดฝากของหาย 5', status:'รอเจ้าของ', img:''},
+  {id:'LF-15',name:'สมุดโน้ต',        type:'📗 การเรียน',         detail:'หน้าปกสีครีม รูปไก่ เด็กผู้หญิง เค้กวันเกิด',    date:'2026-04-20T19:23', foundAt:'ใต้ท้องไดโนเสาร์หน้าตึกวิทย์',      storage:'จุดฝากของหาย 2', status:'รับคืนแล้ว', img:''},
+  {id:'LF-16',name:'พวงกุญแจ',        type:'🔑 กุญแจ',            detail:'ห้องกระดิ่งสีทอง',                                date:'2026-04-20T19:29', foundAt:'ที่จอดรถ BSc',                       storage:'จุดฝากของหาย 5', status:'รอเจ้าของ', img:''},
+  {id:'LF-17',name:'สร้อยคอ',         type:'🧢 เครื่องแต่งกาย',   detail:'มีจี้รูปดาวเสาร์ สีทอง',                          date:'2026-04-20T19:39', foundAt:'ทางไปหอ 8-9',                        storage:'จุดฝากของหาย 1', status:'รอเจ้าของ', img:''},
+  {id:'LF-18',name:'หูฟังไร้สาย',     type:'📱 อิเล็กทรอนิกส์',  detail:'มีปลอกหุ้มลายมังกรสีดำ',                          date:'2026-04-27T21:32', foundAt:'โรงอาหาร คณะวิทย์',                  storage:'ห้องสภานักศึกษาฯ', status:'รอเจ้าของ', img:''},
+  {id:'LF-19',name:'กุญแจ',           type:'🔑 กุญแจ',            detail:'คล้องกับพวงกุญแจกล้องสีฟ้า',                      date:'2026-04-27T21:33', foundAt:'ที่จอดรถหลังตึกกิจ',                 storage:'จุดฝากของหาย 1', status:'รอเจ้าของ', img:''},
+  {id:'LF-20',name:'ปากกา Bluetooth', type:'📱 อิเล็กทรอนิกส์',  detail:'ปลอกหุ้มสีฟ้า',                                   date:'2026-04-27T23:50', foundAt:'ห้อง Co-working space ร่มศรีตรัง',   storage:'จุดฝากของหาย 3', status:'รับคืนแล้ว', img:''},
+  {id:'LF-21',name:'ที่คาดผม',        type:'🧢 เครื่องแต่งกาย',   detail:'สีฟ้า',                                           date:'2026-04-27T23:50', foundAt:'ใต้ตึกฟักทอง',                      storage:'จุดฝากของหาย 5', status:'รอเจ้าของ', img:''},
+  {id:'LF-22',name:'แหวน',            type:'อื่น ๆ',               detail:'สีเงิน',                                          date:'2026-05-09T14:06', foundAt:'จุดรอรถบัส',                         storage:'จุดฝากของหาย 2', status:'รอเจ้าของ', img:''},
+];
+
+function loadItems(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(!raw){ localStorage.setItem(DB_KEY,JSON.stringify(SEED)); return JSON.parse(JSON.stringify(SEED)); }
+  try{ return JSON.parse(raw); } catch(e){ return JSON.parse(JSON.stringify(SEED)); }
+}
+function saveItems(arr){ saveItemsSecure(arr); } /* wrapper — async fire-and-forget */
+function loadCfg(){
+  const raw = localStorage.getItem(CFG_KEY);
+  return raw ? {...DEFAULT_CFG,...JSON.parse(raw)} : {...DEFAULT_CFG};
+}
+function saveCfg(c){ localStorage.setItem(CFG_KEY,JSON.stringify(c)); }
+
+/* Ensure password hash exists on first run — uses PBKDF2 */
+async function initCfg(){
+  cfg = loadCfg();
+  if(!cfg.passwordHash){
+    cfg.passwordHash = await hashPassword(DEFAULT_PWD_PLAIN);
+    delete cfg.password;
+    saveCfg(cfg);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════ */
+let items = loadItems();
+let cfg = loadCfg(); /* overwritten async by initCfg() */
+let pubFilter = 'all';
+let pubSearch = '';
+let isAdmin = false;
+
+/* ═══════════════════════════════════════════════
+   TYPE → EMOJI map for placeholder
+   ═══════════════════════════════════════════════ */
+const TYPE_ICON = {
+  '📱 อิเล็กทรอนิกส์':'📱','🪪 บัตร':'🪪','🔑 กุญแจ':'🔑',
+  '🧢 เครื่องแต่งกาย':'🧢','💄 ของใช้ส่วนตัว':'💄',
+  '📗 การเรียน':'📗','อื่น ๆ':'📦'
+};
+
+/* ═══════════════════════════════════════════════
+   PUBLIC VIEW
+   ═══════════════════════════════════════════════ */
+function renderPublic(){
+  const q = pubSearch.toLowerCase();
+  let filtered = items.filter(it => {
+    const matchFilter =
+      pubFilter === 'all' ? true :
+      pubFilter === 'รอเจ้าของ' || pubFilter === 'รับคืนแล้ว' ? it.status === pubFilter :
+      it.type === pubFilter;
+    const matchSearch = !q || (it.name+it.detail+it.id+it.foundAt).toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  document.getElementById('filterCount').textContent = filtered.length + ' รายการ';
+
+  // Hero stats
+  document.getElementById('heroTotal').textContent = items.length;
+  document.getElementById('heroWaiting').textContent = items.filter(i=>i.status==='รอเจ้าของ').length;
+  document.getElementById('heroReturned').textContent = items.filter(i=>i.status==='รับคืนแล้ว').length;
+
+  const grid = document.getElementById('itemsGrid');
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div>ไม่พบสิ่งของที่ค้นหา<br><small style="margin-top:6px;display:block">ลองเปลี่ยนคำค้นหาหรือตัวกรอง</small></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((it,i) => {
+    const imgEl = it.img
+      ? `<img class="card-img" src="${esc(it.img)}" alt="${esc(it.name)}" loading="lazy">`
+      : `<div class="card-img-placeholder">${TYPE_ICON[it.type]||'📦'}</div>`;
+    const pill = it.status === 'รับคืนแล้ว'
+      ? `<span class="status-pill pill-done">รับคืนแล้ว</span>`
+      : `<span class="status-pill pill-wait">รอเจ้าของ</span>`;
+    return `<div class="item-card" style="animation-delay:${i*0.04}s" onclick="openItemModal('${esc(it.id)}')">
+      ${imgEl}
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-id">${esc(it.id)}</span>
+          ${pill}
+        </div>
+        <div class="card-name">${esc(it.name)}</div>
+        <div class="card-detail">${esc(it.detail)||'—'}</div>
+        <div class="card-footer">
+          <span class="type-badge">${esc(it.type)}</span>
+          <span class="card-location">📍 ${esc(it.foundAt)||'—'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f, btn){
+  pubFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPublic();
+}
+
+document.getElementById('publicSearch').addEventListener('input', e => {
+  pubSearch = e.target.value;
+  renderPublic();
+});
+
+/* ═══════════════════════════════════════════════
+   ITEM DETAIL MODAL
+   ═══════════════════════════════════════════════ */
+function openItemModal(id){
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  document.getElementById('modalTitle').textContent = it.name + ' — ' + it.id;
+  const dateStr = it.date ? new Date(it.date).toLocaleString('th-TH') : '—';
+  const pill = it.status==='รับคืนแล้ว'
+    ? `<span class="status-pill pill-done" style="font-size:13px;padding:5px 14px">✅ รับคืนแล้ว</span>`
+    : `<span class="status-pill pill-wait" style="font-size:13px;padding:5px 14px">⏳ รอเจ้าของ</span>`;
+  const imgEl = it.img ? `<img class="modal-img" src="${esc(it.img)}" alt="${esc(it.name)}">` : '';
+
+  document.getElementById('modalBody').innerHTML = `
+    ${imgEl}
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+      <div class="mf-val-large">${esc(it.name)}</div>
+      ${pill}
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><div class="mf-label">หมายเลข</div><div class="mf-val" style="font-family:var(--mono)">${esc(it.id)}</div></div>
+      <div class="modal-field"><div class="mf-label">ประเภท</div><div class="mf-val">${esc(it.type)}</div></div>
+    </div>
+    <div class="modal-field"><div class="mf-label">รายละเอียด</div><div class="mf-val">${esc(it.detail)||'—'}</div></div>
+    <div class="modal-row">
+      <div class="modal-field"><div class="mf-label">สถานที่พบ</div><div class="mf-val">📍 ${esc(it.foundAt)||'—'}</div></div>
+      <div class="modal-field"><div class="mf-label">วันที่พบ</div><div class="mf-val">${esc(dateStr)}</div></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><div class="mf-label">ที่เก็บรักษา</div><div class="mf-val">🏢 ${esc(it.storage)||'—'}</div></div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+    <p style="font-size:13px;color:var(--text2);text-align:center">📬 ${esc(cfg.contact||DEFAULT_CFG.contact)}</p>
+  `;
+  openModal('itemModal');
+}
+function closeItemModal(){ closeModal('itemModal'); }
+
+/* ═══════════════════════════════════════════════
+   AUTH
+   ═══════════════════════════════════════════════ */
+function openLogin(){
+  if(isSessionValid()){ showAdmin(); return; }
+  openModal('loginModal');
+  setTimeout(()=>document.getElementById('loginPwd').focus(),100);
+}
+function closeLogin(){ closeModal('loginModal'); document.getElementById('loginPwd').value=''; document.getElementById('loginError').classList.remove('show'); }
+
+async function doLogin(){
+  const err = document.getElementById('loginError');
+
+  /* Brute-force check */
+  if(isLocked()){
+    err.textContent = `ล็อคชั่วคราว กรุณารอ ${lockRemaining()} นาที (พยายามผิดเกิน 5 ครั้ง)`;
+    err.classList.add('show'); return;
+  }
+
+  const pwd = document.getElementById('loginPwd').value;
+  if(!pwd){ err.textContent='กรุณาใส่รหัสผ่าน'; err.classList.add('show'); return; }
+
+  cfg = loadCfg();
+  let ok = false;
+
+  /* Try PBKDF2 first */
+  if(cfg.passwordHash && cfg.passwordHash.includes(':')){
+    ok = await verifyPassword(pwd, cfg.passwordHash);
+  } else if(cfg.passwordHash) {
+    /* Legacy SHA-256 — migrate to PBKDF2 on success */
+    const legacyHash = await sha256(pwd);
+    if(legacyHash === cfg.passwordHash){
+      ok = true;
+      cfg.passwordHash = await hashPassword(pwd); /* upgrade hash */
+      saveCfg(cfg);
+    }
+  }
+
+  if(ok){
+    resetBF();
+    isAdmin = true;
+    createSession();
+    resetActivityTimer();
+    auditLog('LOGIN', 'เข้าสู่ระบบสำเร็จ');
+    closeLogin();
+    showAdmin();
+  } else {
+    recordFail();
+    auditLog('FAIL', `รหัสผ่านผิด (ครั้งที่ ${getBF().count})`);
+    const bf = getBF();
+    const remaining = 5 - bf.count;
+    if(remaining > 0){
+      err.textContent = `รหัสผ่านไม่ถูกต้อง (เหลืออีก ${remaining} ครั้งก่อนล็อค)`;
+    } else {
+      err.textContent = `ล็อคชั่วคราว กรุณารอ 15 นาที`;
+    }
+    err.classList.add('show');
+    document.getElementById('loginPwd').select();
+  }
+}
+
+function logout(){
+  auditLog('LOGOUT', 'ออกจากระบบ');
+  isAdmin = false;
+  destroySession();
+  clearTimeout(activityTimer);
+  document.getElementById('adminPanel').classList.remove('open');
+  document.getElementById('publicView').style.display = '';
+  renderPublic();
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN VIEW
+   ═══════════════════════════════════════════════ */
+function showAdmin(){
+  document.getElementById('publicView').style.display = 'none';
+  document.getElementById('adminPanel').classList.add('open');
+  renderDashboard();
+  renderAdminTable();
+  switchTab('dashboard', document.querySelector('.nav-item.active'));
+}
+
+function goPublic(){
+  document.getElementById('adminPanel').classList.remove('open');
+  document.getElementById('publicView').style.display = '';
+  renderPublic();
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+
+  const titles = {
+    dashboard: ['Dashboard','ภาพรวมระบบ Lost & Found'],
+    items:     ['รายการทั้งหมด','ค้นหา แก้ไข และจัดการสิ่งของ'],
+    add:       ['เพิ่ม / แก้ไขสิ่งของ','กรอกข้อมูลสิ่งของที่พบ'],
+    settings:  ['ตั้งค่า','จัดการรหัสผ่านและข้อมูลระบบ'],
+  };
+  const t = titles[name]||['',''];
+  document.getElementById('tabTitle').textContent = t[0];
+  document.getElementById('tabSub').textContent = t[1];
+
+  if(name==='dashboard') renderDashboard();
+  if(name==='settings'){
+    document.getElementById('setOrgName').value = cfg.orgName||DEFAULT_CFG.orgName;
+    document.getElementById('setContact').value = cfg.contact||DEFAULT_CFG.contact;
+    renderAuditLog();
+  }
+}
+
+/* ─ Dashboard ─ */
+function renderDashboard(){
+  items = loadItems();
+  const waiting   = items.filter(i=>i.status==='รอเจ้าของ').length;
+  const returned  = items.filter(i=>i.status==='รับคืนแล้ว').length;
+  const locations = [...new Set(items.map(i=>i.storage).filter(Boolean))].length;
+
+  document.getElementById('dTotal').textContent    = items.length;
+  document.getElementById('dWaiting').textContent  = waiting;
+  document.getElementById('dReturned').textContent = returned;
+  document.getElementById('dLocations').textContent= locations;
+  document.getElementById('sidebarCount').textContent = items.length;
+
+  // Category chart
+  const catCount = {};
+  items.forEach(i=>{ catCount[i.type] = (catCount[i.type]||0)+1; });
+  const cats = Object.entries(catCount).sort((a,b)=>b[1]-a[1]);
+  const maxCat = cats[0]?.[1]||1;
+  const catColors = ['#3b82f6','#22c55e','#f59e0b','#a78bfa','#ef4444','#06b6d4','#f97316'];
+  document.getElementById('chartCategory').innerHTML = cats.map(([k,v],i)=>
+    `<div class="bar-row">
+      <span class="bar-lbl">${k}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxCat*100)}%;background:${catColors[i%catColors.length]};color:#fff">${v}</div></div>
+      <span class="bar-num">${v}</span>
+    </div>`).join('');
+
+  // Location chart
+  const locCount = {};
+  items.forEach(i=>{ if(i.storage) locCount[i.storage] = (locCount[i.storage]||0)+1; });
+  const locs = Object.entries(locCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxLoc = locs[0]?.[1]||1;
+  document.getElementById('chartLocation').innerHTML = locs.map(([k,v],i)=>
+    `<div class="bar-row">
+      <span class="bar-lbl">${k}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxLoc*100)}%;background:${catColors[(i+2)%catColors.length]};color:#fff">${v}</div></div>
+      <span class="bar-num">${v}</span>
+    </div>`).join('');
+
+  // Recent items
+  const recent = [...items].reverse().slice(0,5);
+  document.getElementById('recentItems').innerHTML = recent.map(it=>{
+    const d = it.date ? new Date(it.date).toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : '';
+    const pill = it.status==='รับคืนแล้ว'
+      ? `<span class="status-pill pill-done">รับคืนแล้ว</span>`
+      : `<span class="status-pill pill-wait">รอเจ้าของ</span>`;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text3);width:50px;flex-shrink:0">${it.id}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${it.name}</div><div style="font-size:11px;color:var(--text3)">${it.foundAt||''}</div></div>
+      ${pill}
+      <div style="font-size:11px;color:var(--text3);width:60px;text-align:right">${d}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ─ Admin Table ─ */
+function renderAdminTable(){
+  items = loadItems();
+  const q = document.getElementById('adminSearch').value.toLowerCase();
+  const sf = document.getElementById('adminFilter').value;
+  const tf = document.getElementById('adminTypeFilter').value;
+
+  const filtered = items.filter(it=>{
+    const ms = !sf || it.status===sf;
+    const mt = !tf || it.type===tf;
+    const mq = !q || (it.name+it.id+it.detail+it.foundAt+it.storage).toLowerCase().includes(q);
+    return ms && mt && mq;
+  });
+
+  document.getElementById('adminTableBody').innerHTML = filtered.length
+    ? filtered.map(it=>{
+        const d = it.date ? new Date(it.date).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}) : '';
+        const pill = it.status==='รับคืนแล้ว'
+          ? `<span class="status-pill pill-done">รับคืนแล้ว</span>`
+          : `<span class="status-pill pill-wait">รอเจ้าของ</span>`;
+        return `<tr>
+          <td><span class="td-id">${esc(it.id)}</span></td>
+          <td><div class="td-name">${esc(it.name)}</div><div class="td-detail">${esc(it.detail||'')}</div></td>
+          <td><span class="td-type">${esc(it.type)}</span></td>
+          <td><span class="td-loc">${esc(it.foundAt||'—')}</span></td>
+          <td><span class="td-loc">${esc(it.storage||'—')}</span></td>
+          <td><span class="td-date">${esc(d)}</span></td>
+          <td>${pill}</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn btn-ghost btn-sm" onclick="editItem('${esc(it.id)}')">✏️</button>
+              <button class="btn btn-${it.status==='รับคืนแล้ว'?'ghost':'success'} btn-sm" onclick="toggleStatus('${esc(it.id)}')" title="สลับสถานะ">${it.status==='รับคืนแล้ว'?'↩':'✅'}</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteItem('${esc(it.id)}')">🗑️</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')
+    : `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text3)">ไม่พบข้อมูล</td></tr>`;
+}
+
+/* ─ Add / Edit ─ */
+function resetForm(){
+  document.getElementById('editId').value = '';
+  document.getElementById('fId').value = '';
+  document.getElementById('fName').value = '';
+  document.getElementById('fType').value = '';
+  document.getElementById('fDetail').value = '';
+  document.getElementById('fDate').value = '';
+  document.getElementById('fFoundAt').value = '';
+  document.getElementById('fStorage').value = '';
+  document.getElementById('fStatus').value = 'รอเจ้าของ';
+  document.getElementById('fImg').value = '';
+  clearImage();
+  document.getElementById('saveBtn').textContent = '💾 บันทึก';
+}
+
+function editItem(id){
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  switchTab('add', document.querySelectorAll('.nav-item')[3]);
+  document.getElementById('editId').value = id;
+  document.getElementById('fId').value = it.id;
+  document.getElementById('fName').value = it.name;
+  document.getElementById('fType').value = it.type;
+  document.getElementById('fDetail').value = it.detail||'';
+  document.getElementById('fDate').value = it.date||'';
+  document.getElementById('fFoundAt').value = it.foundAt||'';
+  document.getElementById('fStorage').value = it.storage||'';
+  document.getElementById('fStatus').value = it.status||'รอเจ้าของ';
+  document.getElementById('fImg').value = it.img||'';
+  if(it.img){
+    document.getElementById('imgPreview').src = it.img;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('uploadArea').style.display = 'none';
+  } else {
+    clearImage();
+  }
+  document.getElementById('saveBtn').textContent = '💾 อัปเดต';
+}
+
+function nextId(){
+  const nums = items.map(i=>parseInt(i.id.replace('LF-',''))||0);
+  return 'LF-' + (Math.max(0,...nums)+1);
+}
+
+function saveItem(){
+  const name    = document.getElementById('fName').value.trim();
+  const type    = document.getElementById('fType').value;
+  const editId  = document.getElementById('editId').value;
+  if(!name){ toast('กรุณาใส่ชื่อสิ่งของ','error','⚠️'); return; }
+  if(!type){ toast('กรุณาเลือกประเภท','error','⚠️'); return; }
+
+  const newItem = {
+    id:       document.getElementById('fId').value.trim() || (editId ? editId : nextId()),
+    name,
+    type,
+    detail:   document.getElementById('fDetail').value.trim(),
+    date:     document.getElementById('fDate').value,
+    foundAt:  document.getElementById('fFoundAt').value.trim(),
+    storage:  document.getElementById('fStorage').value.trim(),
+    status:   document.getElementById('fStatus').value,
+    img:      document.getElementById('fImg').value,
+  };
+
+  items = loadItems();
+  if(editId){
+    const idx = items.findIndex(i=>i.id===editId);
+    if(idx>=0) items[idx] = newItem;
+    auditLog('EDIT', `แก้ไข ${newItem.id} — ${newItem.name}`);
+  } else {
+    items.push(newItem);
+    auditLog('ADD', `เพิ่ม ${newItem.id} — ${newItem.name}`);
+  }
+  saveItems(items);
+  auditLog(editId ? 'EDIT' : 'ADD', `${newItem.id} — ${newItem.name}`);
+  toast(editId ? 'อัปเดตสำเร็จ ✓' : 'เพิ่มรายการสำเร็จ ✓','success','✅');
+  resetForm();
+  renderAdminTable();
+  renderDashboard();
+  document.getElementById('sidebarCount').textContent = items.length;
+}
+
+function deleteItem(id){
+  if(!confirm(`ลบรายการ ${id} ออกจากระบบ?`)) return;
+  const it = loadItems().find(i=>i.id===id);
+  items = loadItems().filter(i=>i.id!==id);
+  saveItems(items);
+  auditLog('DELETE', `ลบ ${id}${it?' — '+it.name:''}`);
+  toast('ลบรายการแล้ว','error','🗑️');
+  renderAdminTable();
+  renderDashboard();
+}
+
+function toggleStatus(id){
+  items = loadItems();
+  const it = items.find(i=>i.id===id);
+  if(!it) return;
+  it.status = it.status==='รับคืนแล้ว' ? 'รอเจ้าของ' : 'รับคืนแล้ว';
+  saveItems(items);
+  auditLog('STATUS', `${it.id} — ${it.name} → ${it.status}`);
+  toast(`สถานะ: ${it.status}`,'success','🔄');
+  renderAdminTable();
+  renderDashboard();
+}
+
+/* ─ Image upload ─ */
+function handleImgUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ toast('ไฟล์ใหญ่เกิน 5MB','error','⚠️'); return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const data = ev.target.result;
+    document.getElementById('fImg').value = data;
+    document.getElementById('imgPreview').src = data;
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('uploadArea').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+function clearImage(){
+  document.getElementById('fImg').value = '';
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('uploadArea').style.display = 'block';
+  document.getElementById('imgFile').value = '';
+}
+
+/* ─ Settings ─ */
+async function changePassword(){
+  const cur  = document.getElementById('pwdCurrent').value;
+  const nw   = document.getElementById('pwdNew').value;
+  const conf = document.getElementById('pwdConfirm').value;
+  cfg = loadCfg();
+
+  /* Verify current password with PBKDF2 (or legacy SHA-256) */
+  let curOk = false;
+  if(cfg.passwordHash && cfg.passwordHash.includes(':')){
+    curOk = await verifyPassword(cur, cfg.passwordHash);
+  } else {
+    curOk = (await sha256(cur)) === cfg.passwordHash;
+  }
+  if(!curOk){ toast('รหัสผ่านปัจจุบันไม่ถูกต้อง','error','⚠️'); return; }
+  if(nw.length < 8){ toast('รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร','error','⚠️'); return; }
+  if(!/[A-Za-z]/.test(nw)||!/[0-9]/.test(nw)){ toast('รหัสผ่านต้องมีทั้งตัวอักษรและตัวเลข','error','⚠️'); return; }
+  if(nw !== conf){ toast('รหัสผ่านใหม่ไม่ตรงกัน','error','⚠️'); return; }
+  cfg.passwordHash = await hashPassword(nw); /* PBKDF2 with new salt */
+  delete cfg.password;
+  saveCfg(cfg);
+  auditLog('PWD','เปลี่ยนรหัสผ่านสำเร็จ');
+  toast('เปลี่ยนรหัสผ่านสำเร็จ ✓','success','🔒');
+  document.getElementById('pwdCurrent').value = '';
+  document.getElementById('pwdNew').value = '';
+  document.getElementById('pwdConfirm').value = '';
+}
+
+function saveSettings(){
+  cfg.orgName = document.getElementById('setOrgName').value;
+  cfg.contact = document.getElementById('setContact').value;
+  saveCfg(cfg);
+  toast('บันทึกการตั้งค่าสำเร็จ ✓','success','💾');
+}
+
+function exportData(){
+  auditLog('EXPORT','ส่งออกข้อมูล JSON');
+  const blob = new Blob([JSON.stringify(loadItems(),null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'psu_lost_found_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+
+function confirmClearData(){
+  if(!confirm('⚠️ ล้างข้อมูลทั้งหมด?\n\nรายการสิ่งของทั้งหมดจะถูกลบออก ไม่สามารถกู้คืนได้')) return;
+  if(!confirm('ยืนยันอีกครั้ง: ล้างข้อมูลทั้งหมด?')) return;
+  localStorage.removeItem(DB_KEY);
+  localStorage.removeItem(DB_KEY+'_mac');
+  items = loadItems();
+  auditLog('CLEAR','ล้างข้อมูลทั้งหมด');
+  toast('ล้างข้อมูลแล้ว','error','🗑️');
+  renderAdminTable();
+  renderDashboard();
+}
+
+/* ═══════════════════════════════════════════════
+   AUDIT LOG
+   ═══════════════════════════════════════════════ */
+const AUDIT_KEY = 'psu_lf_audit';
+const AUDIT_MAX = 50;
+function auditLog(action, detail=''){
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(AUDIT_KEY))||[]; } catch(e){}
+  log.unshift({ ts: new Date().toISOString(), action, detail });
+  if(log.length > AUDIT_MAX) log = log.slice(0, AUDIT_MAX);
+  localStorage.setItem(AUDIT_KEY, JSON.stringify(log));
+}
+function renderAuditLog(){
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(AUDIT_KEY))||[]; } catch(e){}
+  const el = document.getElementById('auditLog');
+  if(!el) return;
+  if(!log.length){ el.innerHTML = `<div style="color:var(--text3);padding:12px 0">ยังไม่มีบันทึก</div>`; return; }
+  const icons = { LOGIN:'🔑', LOGOUT:'🚪', FAIL:'⚠️', ADD:'➕', EDIT:'✏️', DELETE:'🗑️', STATUS:'🔄', PWD:'🔒', CLEAR:'💥', EXPORT:'📤' };
+  el.innerHTML = log.map(e=>{
+    const d = new Date(e.ts).toLocaleString('th-TH');
+    const icon = icons[e.action] || '📌';
+    return `<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span>${icon}</span>
+      <span style="color:var(--text3);width:160px;flex-shrink:0">${d}</span>
+      <span style="color:var(--text)">${e.action}</span>
+      <span style="color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.detail)}</span>
+    </div>`;
+  }).join('');
+}
+function clearAuditLog(){
+  if(!confirm('ล้าง Audit Log ทั้งหมด?')) return;
+  localStorage.removeItem(AUDIT_KEY);
+  renderAuditLog();
+  toast('ล้าง Audit Log แล้ว','success','🗑️');
+}
+
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// Close on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); });
+});
+
+// ESC key
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+  }
+});
+
+/* ═══════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════ */
+let toastTimer;
+function toast(msg, type='success', icon='✅'){
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon;
+  el.className = 'show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.className = ''; }, 3000);
+}
+
+/* ═══════════════════════════════════════════════
+   INIT — async startup
+   ═══════════════════════════════════════════════ */
+(async function init(){
+  await initCfg();               /* set up PBKDF2 hash on first run */
+  items = await loadItemsSecure();  /* verify HMAC integrity */
+  renderPublic();
+})();
+</script>
+</body>
+</html>
